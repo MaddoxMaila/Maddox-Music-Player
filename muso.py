@@ -12,6 +12,7 @@ main.title= "Maddox Play Music"
 class Music:
     def __init__(self,root):
         self.i=1
+        self.music_file=''
         self.curr=None
         self.all_songs=[]
         self.realnames=[]
@@ -71,7 +72,17 @@ class Music:
                 self.artist.append(audio['TPE1'].text[0])
                 self.album.append(audio['TALB'].text[0])
         self.list_music()
-    #def add_to_file(self,dir) :
+    def add_to_file(self,dir) :
+        try :
+                self.music_file=open('music_dir/music_dir.txt','a+')
+                self.music_file.write(dir)
+        except :
+            #will finish soon
+    def check_file(self,dir) :
+        if os.path.exists('music_dir/music_dir.txt') and os.path.isfile('music_dir/music_dir.txt') :
+            self.add_to_file(dir)
+        else :
+            #will finish soon
     def list_music(self):
         self.realnames.reverse()
         for songs in self.realnames :
