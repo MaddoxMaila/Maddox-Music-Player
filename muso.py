@@ -72,6 +72,8 @@ class Music:
                 self.realnames.append(audio['title'][0])
             except :
                 print('Mutagen Flac Error')
+        elif aud_dir.endswith('.m4a') :
+            #Will Finish Later
         else :
             try :
                 audio = ID3(aud_dir)
@@ -83,7 +85,6 @@ class Music:
     def add_music(self,dir) :
         for files in os.listdir(dir) :
             if files.endswith('.mp3') or files.endswith('.m4a') or files.endswith('.flac') :
-                #print(files)
                 audio_dir=os.path.realpath(files)
                 self.all_songs.append(audio_dir)
                 self.file_extnxion(audio_dir)
