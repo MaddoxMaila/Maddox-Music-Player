@@ -37,7 +37,7 @@ class Music:
         self.ButtonFrame.pack(side='right')
         self.song_infoFrame=Frame(self.BoxInListBox,bg='#FFEFD5')
         self.song_infoFrame.pack(side='left')
-        self.Play_btn = Button(self.ButtonFrame,padx=25,pady=15, text='Play')
+        self.Play_btn = Button(self.ButtonFrame,padx=25,pady=15, text='Play',command=lambda:self.play(self.i))
         self.Play_btn.grid(row=3, column=3)
         self.Next_btn = Button(self.ButtonFrame, text='Next',padx=25, pady=15,command=lambda: self.play_next(self.i))
         self.Next_btn.grid(row=3, column=2)
@@ -88,14 +88,26 @@ class Music:
                 self.all_songs.append(audio_dir)
                 self.file_extnxion(audio_dir)
         self.list_music()
+    def is_dir_in_file(self,dir) :
+        bool=False
+        try :
+            with open(os.environ.get('HOMEPATH') + '\Maddox Music\directory.txt','r') as directories:
+                for directory in directories :
+                    if directory == dir :
+                        bool=True
+            directories.close()
+        return bool
     def write_to_file(self,dir) :
         if os.path.isfile(os.environ.get('HOMEPATH')+'\Maddox Music\directory.txt') :
-            try :
-                with open(os.environ.get('HOMEPATH') + '\Maddox Music\directory.txt','a') as dir_file :
-                    dir_file.write(dir+'\n')
-                dir_file.close()
-            except IOError :
-                print('Unable To Append To File')
+            if self.is_dir_in_file(dir) :
+                return
+            else :
+                try :
+                    with open(os.environ.get('HOMEPATH')+'\Maddox Music\directory.txt','a') as append_file :
+                        append_file.write(dir+'\n')
+                    append_file.close()
+                except IOError :
+                    print('Unable To Append To File')
         else :
             try :
                 with open(os.environ.get('HOMEPATH') + '\Maddox Music\directory.txt','w') as dir_file :
@@ -135,8 +147,6 @@ class Music:
             pygame.mixer.music.load(self.all_songs[index])
             pygame.mixer.music.play()
             self.append_info(index)
-            #print(self.realnames[index])
-            #print(self.artist[index])
             self.curr = index
         except :
             print('Error')
