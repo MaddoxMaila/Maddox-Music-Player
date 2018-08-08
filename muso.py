@@ -1,6 +1,7 @@
 import os
 from tkinter.filedialog import askdirectory
 from mutagen.id3 import ID3
+from mutage.mp4 import MP4
 from mutagen.flac import FLAC
 import pygame
 from tkinter import *
@@ -63,23 +64,27 @@ class Music:
         os.chdir(self.current_dir)
         self.add_music(self.current_dir)
         self.add_to_file(self.current_dir)
+    def append_info(self,art,alb,rlnm) :
+        self.artist.append(art)
+        self.album.append(alb)
+        self.realnames.append(rlnm)
     def file_extnxion(self,aud_dir):
         if aud_dir.endswith('.flac') :
             try :
                 audio=FLAC(aud_dir)
-                self.artist.append(audio['artist'][0])
-                self.album.append(audio['album'][0])
-                self.realnames.append(audio['title'][0])
+                self.append_info(audio['artist'][0],audio['album'][0],audio['title'][0])
             except :
                 print('Mutagen Flac Error')
         elif aud_dir.endswith('.m4a') :
-            #Will Finish Later
+            try :
+                audio=MP4(aud_dir)
+                self.append_info(audio['xa9ART'],audio['xa9alb'],audio['xa9nam'])
+            except :
+                print('Mutagen MP4 Error')
         else :
             try :
                 audio = ID3(aud_dir)
-                self.realnames.append(audio['TIT2'].text[0])
-                self.artist.append(audio['TPE1'].text[0])
-                self.album.append(audio['TALB'].text[0])
+                self.append_info(audio['TPE1'].text[0],audio['TALB'].text[0],audio['TIT2'].text[0])
             except :
                 print('Mutagen ID3 Error')
     def add_music(self,dir) :
